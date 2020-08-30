@@ -1,0 +1,97 @@
+<h1>Show Rush</h1>
+
+<%= if @live_action in [:edit] do %>
+  <%= live_modal @socket, NflRushingWeb.RushLive.FormComponent,
+    id: @rush.id,
+    title: @page_title,
+    action: @live_action,
+    rush: @rush,
+    return_to: Routes.rush_show_path(@socket, :show, @rush) %>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Player name:</strong>
+    <%= @rush.player_name %>
+  </li>
+
+  <li>
+    <strong>Team abbr:</strong>
+    <%= @rush.team_abbr %>
+  </li>
+
+  <li>
+    <strong>Position:</strong>
+    <%= @rush.position %>
+  </li>
+
+  <li>
+    <strong>Attempts per game:</strong>
+    <%= @rush.attempts_per_game %>
+  </li>
+
+  <li>
+    <strong>Attempts:</strong>
+    <%= @rush.attempts %>
+  </li>
+
+  <li>
+    <strong>Total yards:</strong>
+    <%= @rush.total_yards %>
+  </li>
+
+  <li>
+    <strong>Avg yards per attempt:</strong>
+    <%= @rush.avg_yards_per_attempt %>
+  </li>
+
+  <li>
+    <strong>Yards per game:</strong>
+    <%= @rush.yards_per_game %>
+  </li>
+
+  <li>
+    <strong>Touchdowns:</strong>
+    <%= @rush.touchdowns %>
+  </li>
+
+  <li>
+    <strong>Longest:</strong>
+    <%= @rush.longest %>
+  </li>
+
+  <li>
+    <strong>Longest is touchdown:</strong>
+    <%= @rush.longest_is_touchdown %>
+  </li>
+
+  <li>
+    <strong>First downs:</strong>
+    <%= @rush.first_downs %>
+  </li>
+
+  <li>
+    <strong>First down percentage:</strong>
+    <%= @rush.first_down_percentage %>
+  </li>
+
+  <li>
+    <strong>Twenty plus:</strong>
+    <%= @rush.twenty_plus %>
+  </li>
+
+  <li>
+    <strong>Forty plus:</strong>
+    <%= @rush.forty_plus %>
+  </li>
+
+  <li>
+    <strong>Fumbles:</strong>
+    <%= @rush.fumbles %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.rush_show_path(@socket, :edit, @rush), class: "button" %></span>
+<span><%= live_redirect "Back", to: Routes.rush_index_path(@socket, :index) %></span>

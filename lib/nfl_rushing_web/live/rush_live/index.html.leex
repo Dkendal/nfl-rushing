@@ -1,0 +1,65 @@
+<h1>Listing Rushes</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <%= live_modal @socket, NflRushingWeb.RushLive.FormComponent,
+    id: @rush.id || :new,
+    title: @page_title,
+    action: @live_action,
+    rush: @rush,
+    return_to: Routes.rush_index_path(@socket, :index) %>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Player name</th>
+      <th>Team abbr</th>
+      <th>Position</th>
+      <th>Attempts per game</th>
+      <th>Attempts</th>
+      <th>Total yards</th>
+      <th>Avg yards per attempt</th>
+      <th>Yards per game</th>
+      <th>Touchdowns</th>
+      <th>Longest</th>
+      <th>Longest is touchdown</th>
+      <th>First downs</th>
+      <th>First down percentage</th>
+      <th>Twenty plus</th>
+      <th>Forty plus</th>
+      <th>Fumbles</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="rushes">
+    <%= for rush <- @rushes do %>
+      <tr id="rush-<%= rush.id %>">
+        <td><%= rush.player_name %></td>
+        <td><%= rush.team_abbr %></td>
+        <td><%= rush.position %></td>
+        <td><%= rush.attempts_per_game %></td>
+        <td><%= rush.attempts %></td>
+        <td><%= rush.total_yards %></td>
+        <td><%= rush.avg_yards_per_attempt %></td>
+        <td><%= rush.yards_per_game %></td>
+        <td><%= rush.touchdowns %></td>
+        <td><%= rush.longest %></td>
+        <td><%= rush.longest_is_touchdown %></td>
+        <td><%= rush.first_downs %></td>
+        <td><%= rush.first_down_percentage %></td>
+        <td><%= rush.twenty_plus %></td>
+        <td><%= rush.forty_plus %></td>
+        <td><%= rush.fumbles %></td>
+
+        <td>
+          <span><%= live_redirect "Show", to: Routes.rush_show_path(@socket, :show, rush) %></span>
+          <span><%= live_patch "Edit", to: Routes.rush_index_path(@socket, :edit, rush) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: rush.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Rush", to: Routes.rush_index_path(@socket, :new) %></span>
