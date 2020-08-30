@@ -1,0 +1,84 @@
+* Challenge Requirements
+1. Create a web app. This must be able to do the following steps
+  a. Create a webpage which displays a table with the contents of rushing.json
+  b. The user should be able to sort the players by Total Rushing Yards, Longest Rush and Total Rushing Touchdowns
+  c. The user should be able to filter by the player's name
+  d. The user should be able to download the sorted data as a CSV, as well as a filtered subset
+2. The system should be able to potentially support larger sets of data on the order of 10k records.
+3. Update the section Installation and running this solution in the README file explaining how to run your code
+* TODOs
+** TODO Display welcome page
+- Setup phx
+- Configure a postgres database
+** TODO Display contents of rushing.json
+** TODO User can sort by an arbitrary column
+** TODO System renders one page at a time
+It's suggested by point number 2 that it should be able to support more that
+10K rows. To me this implies it should support pagination or at the very
+least not rendering the entire dataset.
+** TODO User can filter records
+Requirement only specifies that filtering has to happen on the name.
+* Notes
+rushing.json contains 326 entries, and is 79.466kB parsed or 11.038kB over the
+wire.
+
+10K entries would then be about
+Raw = (79466B / 326) * 10,000
+Raw = 2.438MB
+Gzipped = (11038B / 326) * 10,000
+Gzipped = 338.6KB
+
+2.5MB is definitely within the realm of what could be sorted and filtered on the
+client, but probably not ideal.
+
+#+begin_example
+$ jq length rushing.json
+326
+$ wc --bytes  rushing.json
+79466 rushing.json
+$ gzip rushing.json -c | wc -c
+11038
+#+end_example
+
+* Decison log
+1. All local development within Docker
+I don't usually do this, but I don't want any suprises during a follow up
+interview. All local development should occur within a Docker image with the
+context set to the local directory. All OS dependencies should be set here
+and any services can be managed in a compose file. Should make depolying (if
+desired) simplier.
+2. Initial Thoughts on Application design
+I'll set up a basic Phoenix application with LiveView and a Postgres
+database.
+
+Given that theScore works with Elixir Phoenix or Plug is a natural fit.
+
+The requirements talk about doing filtering based on a field, suggest
+paginating the data, and the upper limit for the dataset is 10K records, or
+~2.5MB. Given those constraints and database is more than adequate, and
+infact you could make do with sending the whole file to the client and
+implement all filtering and sorting in JavaScript.
+
+I'd rather make life easier for myself and will just store everything in
+Postgres; with Postgres I can use tsvectors to store the player name (or any
+other text column) to implement a full text search. If I wanted to do this on
+the client I could write a trie implementation but that will only let me work
+on a single column (but would give autocompletion).
+
+Likewise, to make life easier for myself I'll implement a lot of the
+interactive functionality like pagination and reloading datasets via
+LiveView. Rest links would work just fine but reloading content without
+postbacks will be smoother and it'll be way less effort than setting up
+React + state management.
+
+At the moment I'm not sure how much JavaScript I have to write realistically?
+Can easily implement a copy to clipboard functionality this way just to demo
+something on the client.
+
+- Phoenix
+- Postgres
+- Postgres tsvector for full text search
+- LiveView for dynamic content
+- LiveView to store state of the filtered dataset
+- LiveView to incrementally load more pages
+- Tailwindcss and Postcss so I don't have to spend much time fiddling css.
