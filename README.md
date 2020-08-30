@@ -55,10 +55,28 @@ If you have any questions regarding requirements, do not hesitate to email your 
 
 ### Installation and running this solution
 
+*Pre-requisites*
+docker, and docker-compose must be installed locally.
+Alternatively Elixir ~> v1.7, Nodejs and OTP ~> 21.0 must be installed.
+
+#### Running development mode in Docker
+
 ```sh
+docker-compose build
+docker-compose run web mix do deps.get, deps.compile
+docker-compose run web mix ecto.create
+docker-compose run web mix ecto.migrate
+docker-compose run web sh -c 'cd assets && npm i'
+docker-compose up
+```
+
+#### Running with local dependencies
+
+```sh
+cd assets && npm i
+cd ..
+mix do deps.get, deps.compile
 mix ecto.create
-pushd assets
-npm i
-popd
+mix ecto.migrate
 mix phx.server
 ```

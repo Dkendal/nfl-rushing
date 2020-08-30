@@ -1,0 +1,34 @@
+version: "3.8"
+
+services:
+  db:
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+    image: 'postgres:11-alpine'
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data/pgdata
+  web:
+    build:
+      context: .
+    depends_on:
+      - db
+    volumes:
+      - .:/app:ro
+      - node_modules:/app/assets/node_modules:rw
+      - build:/app/_build:rw
+      - deps:/app/deps:rw
+      - static:/app/priv/static:rw
+    ports:
+      - 4000:4000/tcp
+    environment:
+      DATABASE_URL: "postgres://postgres:postgres@db:5432/nfl_rushing_dev"
+
+volumes:
+  pgdata:
+  node_modules:
+  deps:
+  build:
+  static:

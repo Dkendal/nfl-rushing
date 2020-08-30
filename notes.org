@@ -10,7 +10,7 @@
 ** DONE Display welcome page
 - Setup phx
 - Configure a postgres database
-** TODO Dockerize dev environment
+** DONE Dockerize dev environment
 ** TODO Display contents of rushing.json
 ** TODO User can sort by an arbitrary column
 ** TODO System renders one page at a time
@@ -19,6 +19,13 @@ It's suggested by point number 2 that it should be able to support more that
 least not rendering the entire dataset.
 ** TODO User can filter records
 Requirement only specifies that filtering has to happen on the name.
+* Extra credit
+** TODO Dockerize
+** TODO Full text search
+** TODO CI
+** TODO Deploy
+** TODO HTTPS
+** TODO CD
 * Notes
 rushing.json contains 326 entries, and is 79.466kB parsed or 11.038kB over the
 wire.
