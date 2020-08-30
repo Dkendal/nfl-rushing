@@ -7,9 +7,10 @@
 2. The system should be able to potentially support larger sets of data on the order of 10k records.
 3. Update the section Installation and running this solution in the README file explaining how to run your code
 * TODOs
-** TODO Display welcome page
+** DONE Display welcome page
 - Setup phx
 - Configure a postgres database
+** TODO Dockerize dev environment
 ** TODO Display contents of rushing.json
 ** TODO User can sort by an arbitrary column
 ** TODO System renders one page at a time
