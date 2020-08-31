@@ -11,7 +11,7 @@
 - Setup phx
 - Configure a postgres database
 ** DONE Dockerize dev environment
-** TODO Display contents of rushing.json
+** DONE Display contents of rushing.json
 *** DONE Parse number values
   JSON decoder isn't sufficient as they may contain commas
 *** DONE Import contents of rushing.json to the database

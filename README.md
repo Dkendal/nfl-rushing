@@ -64,8 +64,7 @@ Alternatively Elixir ~> v1.7, Nodejs and OTP ~> 21.0 must be installed.
 ```sh
 docker-compose build
 docker-compose run web mix do deps.get, deps.compile
-docker-compose run web mix ecto.create
-docker-compose run web mix ecto.migrate
+docker-compose run web mix ecto.setup
 docker-compose run web sh -c 'cd assets && npm i'
 docker-compose up
 ```
@@ -76,7 +75,6 @@ docker-compose up
 cd assets && npm i
 cd ..
 mix do deps.get, deps.compile
-mix ecto.create
-mix ecto.migrate
+mix ecto.setup
 mix phx.server
 ```
