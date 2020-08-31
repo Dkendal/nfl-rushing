@@ -1,5 +1,4 @@
 <h1>Listing Rushes</h1>
-
 <%= if @live_action in [:new, :edit] do %>
   <%= live_modal @socket, NflRushingWeb.RushLive.FormComponent,
     id: @rush.id || :new,
@@ -8,27 +7,25 @@
     rush: @rush,
     return_to: Routes.rush_index_path(@socket, :index) %>
 <% end %>
-
 <table>
   <thead>
     <tr>
-      <th><%= gettext "Player name" %></th>
-      <th><%= gettext "Team abbr" %></th>
-      <th><%= gettext "Position" %></th>
-      <th><%= gettext "Attempts per game" %></th>
-      <th><%= gettext "Attempts" %></th>
-      <th><%= gettext "Total yards" %></th>
-      <th><%= gettext "Avg yards per attempt" %></th>
-      <th><%= gettext "Yards per game" %></th>
-      <th><%= gettext "Touchdowns" %></th>
-      <th><%= gettext "Longest" %></th>
-      <th><%= gettext "Longest is touchdown" %></th>
-      <th><%= gettext "First downs" %></th>
-      <th><%= gettext "First down percentage" %></th>
-      <th><%= gettext "Twenty plus" %></th>
-      <th><%= gettext "Forty plus" %></th>
-      <th><%= gettext "Fumbles" %></th>
-
+      <th><%= sort_link @socket, gettext("Player name"), :player_name %></th>
+      <th><%= sort_link @socket, gettext("Team abbr"), :team_abbr %></th>
+      <th><%= sort_link @socket, gettext("Position"), :position %></th>
+      <th><%= sort_link @socket, gettext("Attempts per game"), :attempts_per_game %></th>
+      <th><%= sort_link @socket, gettext("Attempts"), :attempts %></th>
+      <th><%= sort_link @socket, gettext("Total yards"), :total_yards %></th>
+      <th><%= sort_link @socket, gettext("Avg yards per attempt"), :avg_yards_per_attempt %></th>
+      <th><%= sort_link @socket, gettext("Yards per game"), :yards_per_game %></th>
+      <th><%= sort_link @socket, gettext("Touchdowns"), :touchdowns %></th>
+      <th><%= sort_link @socket, gettext("Longest"), :longest %></th>
+      <th><%= sort_link @socket, gettext("Longest is touchdown"), :longest_is_touchdown %></th>
+      <th><%= sort_link @socket, gettext("First downs"), :first_downs %></th>
+      <th><%= sort_link @socket, gettext("First down percentage"), :first_down_percentage %></th>
+      <th><%= sort_link @socket, gettext("Twenty plus"), :twenty_plus %></th>
+      <th><%= sort_link @socket, gettext("Forty plus"),  :forty_plus %></th>
+      <th><%= sort_link @socket, gettext("Fumbles"),  :fumbles %></th>
       <th></th>
     </tr>
   </thead>
@@ -51,7 +48,6 @@
         <td><%= rush.twenty_plus %></td>
         <td><%= rush.forty_plus %></td>
         <td><%= rush.fumbles %></td>
-
         <td>
           <span><%= live_redirect "Show", to: Routes.rush_show_path(@socket, :show, rush) %></span>
           <span><%= live_patch "Edit", to: Routes.rush_index_path(@socket, :edit, rush) %></span>
@@ -61,5 +57,4 @@
     <% end %>
   </tbody>
 </table>
-
 <span><%= live_patch "New Rush", to: Routes.rush_index_path(@socket, :new) %></span>
