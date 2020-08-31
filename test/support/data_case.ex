@@ -18,11 +18,7 @@ defmodule NflRushing.DataCase do
 
   using do
     quote do
-      alias NflRushing.Repo
-
-      import Ecto
-      import Ecto.Changeset
-      import Ecto.Query
+      use NflRushing.Context
       import NflRushing.DataCase
     end
   end
