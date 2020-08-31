@@ -24,6 +24,8 @@ least not rendering the entire dataset.
 Requirement only specifies that filtering has to happen on the name.
 * Extra credit
 ** TODO Dockerize
+** TODO make pretty
+** TODO add a graph with d3
 ** TODO Full text search
 ** TODO CI
 ** TODO Deploy

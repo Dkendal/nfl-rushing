@@ -28,8 +28,8 @@ defmodule NflRushingWeb.RushLive.Index do
   defp apply_action(socket, :index, params) do
     socket
     |> parse_query(params)
-    |> put_rushes()
-    |> assign(:page_title, "Listing Rushes")
+    |> (&assign(&1, :rushes, list_rushes(&1.assigns.query))).()
+    |> assign(:page_title, "Rushing")
     |> assign(:rush, nil)
   end
 
@@ -44,24 +44,28 @@ defmodule NflRushingWeb.RushLive.Index do
   @valid_sort_by Rush.__schema__(:fields) |> Enum.map(&to_string/1)
   @valid_dir ["asc", "desc"]
 
-  def parse_query(socket, %{"sort_by" => key, "dir" => dir} = params)
+  @default_query %{
+    order: %{by: :player_name, dir: :asc}
+  }
+
+  def parse_query(socket, params, query \\ @default_query)
+
+  def parse_query(socket, %{"sort_by" => key, "dir" => dir} = params, query)
       when dir in @valid_dir and key in @valid_sort_by do
-    key = String.to_existing_atom(key)
-    dir = String.to_existing_atom(dir)
+    query =
+      Map.put(query, :order, %{
+        by: String.to_existing_atom(key),
+        dir: String.to_existing_atom(dir)
+      })
 
-    socket
-    |> assign(:order, %{by: key, dir: dir})
-    |> parse_query(Map.drop(params, ["sort_by", "dir"]))
+    params = Map.drop(params, ["sort_by", "dir"])
+
+    parse_query(socket, params, query)
   end
 
-  def parse_query(socket, _) do
+  def parse_query(socket, _params, query) do
     # Base case and default sorting options
-    socket
-    |> assign_new(:order, fn -> %{by: :name, dir: :asc} end)
-  end
-
-  def put_rushes(socket) do
-    assign(socket, :rushes, list_rushes(socket.assigns))
+    assign(socket, :query, query)
   end
 
   # All of this could be moved to a Stats or another module
@@ -91,15 +95,49 @@ defmodule NflRushingWeb.RushLive.Index do
     Stats.list_rushes()
   end
 
-  def toggle_dir(:asc), do: :desc
-  def toggle_dir(:desc), do: :asc
-  def toggle_dir(%{order: %{dir: dir}}), do: toggle_dir(dir)
+  @doc """
+  Toggle the current value of `query.order.dir` if `field` is being ordered on.
+  Otherwise, return :asc.
+  """
+  def toggle_dir(field, %{order: %{by: field, dir: :asc}}), do: :desc
+  def toggle_dir(field, %{order: %{by: field, dir: :desc}}), do: :asc
+  def toggle_dir(_field, _query), do: :asc
 
-  # Templating
-
-  def sort_link(socket, assigns, text, field) do
+  def sort_link(socket, %{text: text, field: field, query: query}) do
     live_patch(text,
-      to: Routes.rush_index_path(socket, :index, sort_by: field, dir: toggle_dir(assigns))
+      to: Routes.rush_index_path(socket, :index, sort_by: field, dir: toggle_dir(field, query))
     )
+  end
+
+  def sort_link(socket, opts) when is_list(opts) do
+    sort_link(socket, Map.new(opts))
+  end
+
+  @doc """
+  Return the direction of the field as an atom. Nil if the field is not
+  sorted.
+  """
+  def sort_dir(field, %{order: %{by: field, dir: dir}}), do: dir
+  def sort_dir(_field, _query), do: nil
+
+  def table_headers() do
+    [
+      {gettext("Player name"), :player_name},
+      {gettext("Team abbr"), :team_abbr},
+      {gettext("Position"), :position},
+      {gettext("Attempts per game"), :attempts_per_game},
+      {gettext("Attempts"), :attempts},
+      {gettext("Total yards"), :total_yards},
+      {gettext("Avg yards per attempt"), :avg_yards_per_attempt},
+      {gettext("Yards per game"), :yards_per_game},
+      {gettext("Touchdowns"), :touchdowns},
+      {gettext("Longest"), :longest},
+      {gettext("Longest is touchdown"), :longest_is_touchdown},
+      {gettext("First downs"), :first_downs},
+      {gettext("First down percentage"), :first_down_percentage},
+      {gettext("Twenty plus"), :twenty_plus},
+      {gettext("Forty plus"), :forty_plus},
+      {gettext("Fumbles"), :fumbles}
+    ]
   end
 end
