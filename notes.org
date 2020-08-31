@@ -12,6 +12,9 @@
 - Configure a postgres database
 ** DONE Dockerize dev environment
 ** TODO Display contents of rushing.json
+*** DONE Parse number values
+  JSON decoder isn't sufficient as they may contain commas
+*** DONE Import contents of rushing.json to the database
 ** TODO User can sort by an arbitrary column
 ** TODO System renders one page at a time
 It's suggested by point number 2 that it should be able to support more that
