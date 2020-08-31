@@ -7,25 +7,27 @@
     rush: @rush,
     return_to: Routes.rush_index_path(@socket, :index) %>
 <% end %>
+
+<%# <%= inspect assigns, pretty: true %1> %>
 <table>
   <thead>
     <tr>
-      <th><%= sort_link @socket, gettext("Player name"), :player_name %></th>
-      <th><%= sort_link @socket, gettext("Team abbr"), :team_abbr %></th>
-      <th><%= sort_link @socket, gettext("Position"), :position %></th>
-      <th><%= sort_link @socket, gettext("Attempts per game"), :attempts_per_game %></th>
-      <th><%= sort_link @socket, gettext("Attempts"), :attempts %></th>
-      <th><%= sort_link @socket, gettext("Total yards"), :total_yards %></th>
-      <th><%= sort_link @socket, gettext("Avg yards per attempt"), :avg_yards_per_attempt %></th>
-      <th><%= sort_link @socket, gettext("Yards per game"), :yards_per_game %></th>
-      <th><%= sort_link @socket, gettext("Touchdowns"), :touchdowns %></th>
-      <th><%= sort_link @socket, gettext("Longest"), :longest %></th>
-      <th><%= sort_link @socket, gettext("Longest is touchdown"), :longest_is_touchdown %></th>
-      <th><%= sort_link @socket, gettext("First downs"), :first_downs %></th>
-      <th><%= sort_link @socket, gettext("First down percentage"), :first_down_percentage %></th>
-      <th><%= sort_link @socket, gettext("Twenty plus"), :twenty_plus %></th>
-      <th><%= sort_link @socket, gettext("Forty plus"),  :forty_plus %></th>
-      <th><%= sort_link @socket, gettext("Fumbles"),  :fumbles %></th>
+      <th><%= sort_link @socket, assigns, gettext("Player name"), :player_name %></th>
+      <th><%= sort_link @socket, assigns, gettext("Team abbr"), :team_abbr %></th>
+      <th><%= sort_link @socket, assigns, gettext("Position"), :position %></th>
+      <th><%= sort_link @socket, assigns, gettext("Attempts per game"), :attempts_per_game %></th>
+      <th><%= sort_link @socket, assigns, gettext("Attempts"), :attempts %></th>
+      <th><%= sort_link @socket, assigns, gettext("Total yards"), :total_yards %></th>
+      <th><%= sort_link @socket, assigns, gettext("Avg yards per attempt"), :avg_yards_per_attempt %></th>
+      <th><%= sort_link @socket, assigns, gettext("Yards per game"), :yards_per_game %></th>
+      <th><%= sort_link @socket, assigns, gettext("Touchdowns"), :touchdowns %></th>
+      <th><%= sort_link @socket, assigns, gettext("Longest"), :longest %></th>
+      <th><%= sort_link @socket, assigns, gettext("Longest is touchdown"), :longest_is_touchdown %></th>
+      <th><%= sort_link @socket, assigns, gettext("First downs"), :first_downs %></th>
+      <th><%= sort_link @socket, assigns, gettext("First down percentage"), :first_down_percentage %></th>
+      <th><%= sort_link @socket, assigns, gettext("Twenty plus"), :twenty_plus %></th>
+      <th><%= sort_link @socket, assigns, gettext("Forty plus"),  :forty_plus %></th>
+      <th><%= sort_link @socket, assigns, gettext("Fumbles"),  :fumbles %></th>
       <th></th>
     </tr>
   </thead>

@@ -4,19 +4,9 @@ defmodule NflRushingWeb.RushLive.Index do
   alias NflRushing.Stats
   alias NflRushing.Stats.Rush
 
-  defstruct []
-
   @impl true
   def mount(params, _session, socket) do
-    {:ok, assign(socket, :rushes, list_rushes(params))}
-  end
-
-  @impl true
-  def handle_params(%{"sort_by" => _, "dir" => _} = params, _url, socket) do
-    {:noreply,
-     socket
-     |> assign(:rushes, list_rushes(params))
-     |> apply_action(socket.assigns.live_action, params)}
+    {:ok, assign(socket, rushes: list_rushes())}
   end
 
   def handle_params(params, _url, socket) do
@@ -35,8 +25,10 @@ defmodule NflRushingWeb.RushLive.Index do
     |> assign(:rush, %Rush{})
   end
 
-  defp apply_action(socket, :index, _params) do
+  defp apply_action(socket, :index, params) do
     socket
+    |> parse_query(params)
+    |> put_rushes()
     |> assign(:page_title, "Listing Rushes")
     |> assign(:rush, nil)
   end
@@ -49,10 +41,49 @@ defmodule NflRushingWeb.RushLive.Index do
     {:noreply, assign(socket, :rushes, list_rushes())}
   end
 
-  defp list_rushes(%{"sort_by" => sort_field, "dir" => dir}) do
-    use NflRushing.Context
+  @valid_sort_by Rush.__schema__(:fields) |> Enum.map(&to_string/1)
+  @valid_dir ["asc", "desc"]
 
-    from(r in Rush, order_by: [asc: ^String.to_existing_atom(sort_field)])
+  def parse_query(socket, %{"sort_by" => key, "dir" => dir} = params)
+      when dir in @valid_dir and key in @valid_sort_by do
+    key = String.to_existing_atom(key)
+    dir = String.to_existing_atom(dir)
+
+    socket
+    |> assign(:order, %{by: key, dir: dir})
+    |> parse_query(Map.drop(params, ["sort_by", "dir"]))
+  end
+
+  def parse_query(socket, _) do
+    # Base case and default sorting options
+    socket
+    |> assign_new(:order, fn -> %{by: :name, dir: :asc} end)
+  end
+
+  def put_rushes(socket) do
+    assign(socket, :rushes, list_rushes(socket.assigns))
+  end
+
+  # All of this could be moved to a Stats or another module
+  use NflRushing.Context
+
+  defp build_query(query, opts) when is_map(opts) do
+    build_query(query, Map.to_list(opts))
+  end
+
+  defp build_query(query, [{:order, %{dir: dir, by: by}} | opts]) do
+    query
+    |> from(order_by: [{^dir, ^by}])
+    |> build_query(opts)
+  end
+
+  defp build_query(query, [_h | t]), do: build_query(query, t)
+
+  defp build_query(query, []), do: query
+
+  defp list_rushes(assigns) do
+    Rush
+    |> build_query(assigns)
     |> Repo.all()
   end
 
@@ -60,9 +91,15 @@ defmodule NflRushingWeb.RushLive.Index do
     Stats.list_rushes()
   end
 
+  def toggle_dir(:asc), do: :desc
+  def toggle_dir(:desc), do: :asc
+  def toggle_dir(%{order: %{dir: dir}}), do: toggle_dir(dir)
+
   # Templating
 
-  def sort_link(socket, text, field) do
-    live_patch(text, to: Routes.rush_index_path(socket, :index, sort_by: field, dir: :asc))
+  def sort_link(socket, assigns, text, field) do
+    live_patch(text,
+      to: Routes.rush_index_path(socket, :index, sort_by: field, dir: toggle_dir(assigns))
+    )
   end
 end
