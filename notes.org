@@ -15,7 +15,7 @@
 *** DONE Parse number values
   JSON decoder isn't sufficient as they may contain commas
 *** DONE Import contents of rushing.json to the database
-** TODO User can sort by an arbitrary column
+** DONE User can sort by an arbitrary column
 ** TODO System renders one page at a time
 It's suggested by point number 2 that it should be able to support more that
 10K rows. To me this implies it should support pagination or at the very
