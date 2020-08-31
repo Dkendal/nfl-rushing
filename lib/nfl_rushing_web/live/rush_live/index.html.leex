@@ -38,8 +38,9 @@
         <td><%= rush.avg_yards_per_attempt %></td>
         <td><%= rush.yards_per_game %></td>
         <td><%= rush.touchdowns %></td>
-        <td><%= rush.longest %></td>
-        <td><%= rush.longest_is_touchdown %></td>
+        <td>
+          <span><%= rush.longest %></span><span><%= if rush.longest_is_touchdown, do: "T", else: "" %></span>
+        </td>
         <td><%= rush.first_downs %></td>
         <td><%= rush.first_down_percentage %></td>
         <td><%= rush.twenty_plus %></td>

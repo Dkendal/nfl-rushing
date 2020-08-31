@@ -132,7 +132,6 @@ defmodule NflRushingWeb.RushLive.Index do
       {gettext("Yards per game"), :yards_per_game},
       {gettext("Touchdowns"), :touchdowns},
       {gettext("Longest"), :longest},
-      {gettext("Longest is touchdown"), :longest_is_touchdown},
       {gettext("First downs"), :first_downs},
       {gettext("First down percentage"), :first_down_percentage},
       {gettext("Twenty plus"), :twenty_plus},
