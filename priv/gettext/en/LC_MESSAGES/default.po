@@ -1,0 +1,87 @@
+## "msgid"s in this file come from POT (.pot) files.
+##
+## Do not add, change, or remove "msgid"s manually here as
+## they're tied to the ones in the corresponding POT file
+## (with the same domain).
+##
+## Use "mix gettext.extract --merge" or "mix gettext.merge"
+## to merge POT files into PO files.
+msgid ""
+msgstr ""
+"Language: en\n"
+"Plural-Forms: nplurals=2\n"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:19
+msgid "Attempts"
+msgstr "Att"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:18
+msgid "Attempts per game"
+msgstr "Att/G"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:21
+msgid "Avg yards per attempt"
+msgstr "Avg"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:27
+msgid "First down percentage"
+msgstr "1st%"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:26
+msgid "First downs"
+msgstr "1st"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:29
+msgid "Forty plus"
+msgstr "40+"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:30
+msgid "Fumbles"
+msgstr "FUM"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:24
+msgid "Longest"
+msgstr "Lng"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:15
+msgid "Player name"
+msgstr "Name"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:17
+msgid "Position"
+msgstr "Pos"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:16
+msgid "Team abbr"
+msgstr "Team"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:20
+msgid "Total yards"
+msgstr "Yds"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:23
+msgid "Touchdowns"
+msgstr "TD"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:28
+msgid "Twenty plus"
+msgstr "20+"
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:22
+msgid "Yards per game"
+msgstr "Yds/G"

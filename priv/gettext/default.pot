@@ -1,0 +1,96 @@
+## This file is a PO Template file.
+##
+## "msgid"s here are often extracted from source code.
+## Add new translations manually only if they're dynamic
+## translations that can't be statically extracted.
+##
+## Run "mix gettext.extract" to bring this file up to
+## date. Leave "msgstr"s empty as changing them here as no
+## effect: edit them in PO (.po) files instead.
+msgid ""
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:19
+msgid "Attempts"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:18
+msgid "Attempts per game"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:21
+msgid "Avg yards per attempt"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:27
+msgid "First down percentage"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:26
+msgid "First downs"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:29
+msgid "Forty plus"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:30
+msgid "Fumbles"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:24
+msgid "Longest"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:25
+msgid "Longest is touchdown"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:15
+msgid "Player name"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:17
+msgid "Position"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:16
+msgid "Team abbr"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:20
+msgid "Total yards"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:23
+msgid "Touchdowns"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:28
+msgid "Twenty plus"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/page_live.html.leex:2
+msgid "Welcome to %{name}!"
+msgstr ""
+
+#, elixir-format
+#: lib/nfl_rushing_web/live/rush_live/index.html.leex:22
+msgid "Yards per game"
+msgstr ""
