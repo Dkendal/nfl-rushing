@@ -20,16 +20,18 @@
       <tr>
         <%= for {text, field} <- table_headers() do %>
           <th>
-            <span><%= sort_link @socket, dir: @order_dir, key: @order_key, text: text, field: field %></span>
-            <%= case sort_dir(field, @order_key, @order_dir) do %>
-              <% :asc -> %>
-              <span>&#9660;</span>
-              <% :desc -> %>
-              <span>&#9650;</span>
-              <% nil -> %>
-            <% end %>
-          </th>
-        <% end %>
+            <div class="flex">
+              <div><%= sort_link @socket, dir: @order_dir, key: @order_key, text: text, field: field %></div>
+              <%= case sort_dir(field, @order_key, @order_dir) do %>
+                <% :asc -> %>
+                <div>&#9660;</div>
+                <% :desc -> %>
+                <div>&#9650;</div>
+                <% nil -> %>
+              <% end %>
+            </th>
+          <% end %>
+        </div>
         <th></th>
       </tr>
     </thead>
