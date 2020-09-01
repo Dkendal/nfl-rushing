@@ -16,12 +16,21 @@
   JSON decoder isn't sufficient as they may contain commas
 *** DONE Import contents of rushing.json to the database
 ** DONE User can sort by an arbitrary column
-** TODO System renders one page at a time
+** DONE System renders one page at a time
 It's suggested by point number 2 that it should be able to support more that
 10K rows. To me this implies it should support pagination or at the very
 least not rendering the entire dataset.
-** TODO User can filter records
+** DONE User can filter records
 Requirement only specifies that filtering has to happen on the name.
+** DONE User can download entire dataset
+** TODO User can download filtered & sorted dataset
+   I'm going to assume that the below quote is implying that the filtered
+   dataset is also sorted.
+
+   #+begin_quote
+   d. The user should be able to download the sorted data as a CSV, as well as a filtered subset
+   #+end_quote
+
 * Extra credit
 ** TODO Dockerize
 ** TODO make pretty

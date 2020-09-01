@@ -17,6 +17,8 @@ defmodule NflRushingWeb.Router do
   scope "/", NflRushingWeb do
     pipe_through :browser
 
+    get("/downloads/rushing.:mime", DownloadController, :index)
+
     live "/", PageLive, :index
 
     live "/rushes", RushLive.Index, :index

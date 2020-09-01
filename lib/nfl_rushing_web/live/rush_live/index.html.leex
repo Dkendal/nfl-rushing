@@ -75,4 +75,6 @@
       <div class="m-4"><%= live_patch "Next", to: Routes.rush_index_path(@socket, :index, page: @page + 1) %></div>
     <% end %>
   </div>
+
+  <%= link "Download", to: Routes.download_path(@socket, :index, "csv") %>
 <% end %>

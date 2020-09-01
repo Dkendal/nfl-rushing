@@ -94,4 +94,30 @@ defmodule NflRushing.Stats.Rush do
       :fumbles
     ])
   end
+
+  def to_csv(rushes) when is_list(rushes) do
+    header = Enum.map(abbrs(), &to_string/1)
+    to_csv(rushes, [header]) |> Enum.reverse()
+  end
+
+  def to_csv([], acc) do
+    acc
+  end
+
+  def to_csv([%__MODULE__{} = rush | tail], acc) do
+    rush = Map.from_struct(rush)
+
+    rush =
+      Enum.map(fields(), fn
+        :longest ->
+          lng = Map.fetch!(rush, :longest)
+          lng_t = Map.fetch!(rush, :longest_is_touchdown)
+          "#{lng}#{if(lng_t, do: "T")}"
+
+        field ->
+          rush[field]
+      end)
+
+    to_csv(tail, [rush | acc])
+  end
 end
