@@ -23,6 +23,37 @@ defmodule NflRushing.Stats.Rush do
     timestamps()
   end
 
+  @mapping [
+    {:"1st", :first_downs},
+    {:"1st%", :first_down_percentage},
+    {:"20+", :twenty_plus},
+    {:"40+", :forty_plus},
+    {:Att, :attempts},
+    {:"Att/G", :attempts_per_game},
+    {:Avg, :avg_yards_per_attempt},
+    {:FUM, :fumbles},
+    {:Lng, :longest},
+    {:Player, :player_name},
+    {:Pos, :position},
+    {:TD, :touchdowns},
+    {:Team, :team_abbr},
+    {:Yds, :total_yards},
+    {:"Yds/G", :yards_per_game}
+  ]
+
+  def abbrs() do
+    unquote(for {k, _} <- @mapping, do: k)
+  end
+
+  def fields() do
+    unquote(for {_, v} <- @mapping, do: v)
+  end
+
+  for {abbr, field} <- @mapping do
+    def abbr_to_field(unquote(abbr)), do: unquote(field)
+    def field_to_abbr(unquote(field)), do: unquote(abbr)
+  end
+
   @doc false
   def changeset(rush, attrs) do
     rush

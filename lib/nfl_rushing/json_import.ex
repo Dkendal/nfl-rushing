@@ -3,22 +3,6 @@ defmodule NflRushing.JsonImport do
 
   alias NflRushing.Stats.Rush
 
-  def abbr_to_field(:"1st"), do: :first_downs
-  def abbr_to_field(:"1st%"), do: :first_down_percentage
-  def abbr_to_field(:"20+"), do: :twenty_plus
-  def abbr_to_field(:"40+"), do: :forty_plus
-  def abbr_to_field(:Att), do: :attempts
-  def abbr_to_field(:"Att/G"), do: :attempts_per_game
-  def abbr_to_field(:Avg), do: :avg_yards_per_attempt
-  def abbr_to_field(:FUM), do: :fumbles
-  def abbr_to_field(:Lng), do: :longest
-  def abbr_to_field(:Player), do: :player_name
-  def abbr_to_field(:Pos), do: :position
-  def abbr_to_field(:TD), do: :touchdowns
-  def abbr_to_field(:Team), do: :team_abbr
-  def abbr_to_field(:Yds), do: :total_yards
-  def abbr_to_field(:"Yds/G"), do: :yards_per_game
-
   def normalize_longist(rush = %{longest: lng}) when is_integer(lng), do: rush
 
   def normalize_longist(rush = %{longest: lng}) when is_binary(lng) do
@@ -51,7 +35,7 @@ defmodule NflRushing.JsonImport do
   Convert an object from rushing.json to a Rush struct.
   """
   def to_struct(record) do
-    Enum.map(record, fn {k, v} -> {abbr_to_field(k), v} end)
+    Enum.map(record, fn {k, v} -> {Rush.abbr_to_field(k), v} end)
     |> Map.new()
     |> normalize_longist()
     |> Map.update!(:total_yards, &string_to_integer/1)
