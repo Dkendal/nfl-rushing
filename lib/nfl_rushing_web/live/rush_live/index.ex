@@ -7,7 +7,7 @@ defmodule NflRushingWeb.RushLive.Index do
   alias NflRushing.Stats.Rush
 
   @impl true
-  def mount(params, _session, socket) do
+  def mount(_params, _session, socket) do
     socket =
       assign(socket,
         loading: false,
@@ -23,7 +23,6 @@ defmodule NflRushingWeb.RushLive.Index do
 
   @impl true
   def handle_params(params, _url, socket) do
-    IO.puts("Handle params")
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
@@ -44,6 +43,7 @@ defmodule NflRushingWeb.RushLive.Index do
     |> put_params(params)
     |> put_page_count()
     |> put_rushes()
+    |> assign(:params, params)
     |> assign(:page_title, "Rushing")
     |> assign(:rush, nil)
   end
@@ -69,38 +69,11 @@ defmodule NflRushingWeb.RushLive.Index do
     {:noreply, assign(socket, :rushes, list_rushes())}
   end
 
-  @valid_sort_by Rush.__schema__(:fields) |> Enum.map(&to_string/1)
-  @valid_dir ["asc", "desc"]
-
-  defp put_params(socket, params) do
-    query_args =
-      Enum.flat_map(params, fn
-        {"dir", v} when v in @valid_dir ->
-          [order_dir: String.to_existing_atom(v)]
-
-        {"sort_by", v} when v in @valid_sort_by ->
-          [order_key: String.to_existing_atom(v)]
-
-        {"page", v} ->
-          {int, _} = Integer.parse(v)
-          [page: int]
-
-        {"size", v} ->
-          {int, _} = Integer.parse(v)
-          [size: int]
-
-        {"q", v} ->
-          [search: v]
-
-        {_k, _v} ->
-          []
-      end)
-
-    socket
-    |> assign(query_args)
-  end
-
   use NflRushing.Context
+
+  def put_params(socket, params) do
+    assign(socket, Map.to_list(Stats.RushQueryParams.parse(params)))
+  end
 
   defp put_rushes(%{assigns: %{page_count: 0}} = socket) do
     assign(socket, :rushes, [])

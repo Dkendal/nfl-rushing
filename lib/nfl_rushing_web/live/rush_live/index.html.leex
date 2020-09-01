@@ -60,6 +60,7 @@
       <% end %>
     </tbody>
   </table>
+
   <div class="flex">
     <%= if @page > 1 do %>
       <div class="m-4"><%= live_patch "Prev", to: Routes.rush_index_path(@socket, :index, page: @page - 1) %></div>
@@ -75,6 +76,6 @@
       <div class="m-4"><%= live_patch "Next", to: Routes.rush_index_path(@socket, :index, page: @page + 1) %></div>
     <% end %>
   </div>
-
-  <%= link "Download", to: Routes.download_path(@socket, :index, "csv") %>
+  <span class="m4"><%= link "Download visible", to: Routes.download_path(@socket, :index, "csv", q: @search, sort_by: @order_key, dir: @order_dir, page: @page), download: true  %></span>
+  <span class="m-4"><%= link "Download all", to: Routes.download_path(@socket, :index, "csv", q: @search, sort_by: @order_key, dir: @order_dir), download: true %></span>
 <% end %>

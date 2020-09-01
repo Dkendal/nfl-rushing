@@ -22,6 +22,13 @@ defmodule NflRushingWeb.RushLiveTest do
   describe "Index" do
     setup [:create_rush]
 
+    test "lists all rushes with sorting options", %{conn: conn, rush: rush} do
+      {:ok, _index_live, html} = live(conn, Routes.rush_index_path(conn, :index, %{"order_by" => "player_name"}))
+
+      assert html =~ "Listing Rushes"
+      assert html =~ rush.player_name
+    end
+
     test "lists all rushes", %{conn: conn, rush: rush} do
       {:ok, _index_live, html} = live(conn, Routes.rush_index_path(conn, :index))
 

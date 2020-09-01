@@ -6,6 +6,7 @@
   d. The user should be able to download the sorted data as a CSV, as well as a filtered subset
 2. The system should be able to potentially support larger sets of data on the order of 10k records.
 3. Update the section Installation and running this solution in the README file explaining how to run your code
+* 
 * TODOs
 ** DONE Display welcome page
 - Setup phx
@@ -23,7 +24,7 @@ least not rendering the entire dataset.
 ** DONE User can filter records
 Requirement only specifies that filtering has to happen on the name.
 ** DONE User can download entire dataset
-** TODO User can download filtered & sorted dataset
+** DONE User can download filtered & sorted dataset
    I'm going to assume that the below quote is implying that the filtered
    dataset is also sorted.
 

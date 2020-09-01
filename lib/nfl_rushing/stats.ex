@@ -1,3 +1,37 @@
+defmodule NflRushing.Stats.RushQueryParams do
+  alias NflRushing.Stats.Rush
+
+  # defstruct([:order_dir, :order_key, :page, :size, :search])
+
+  @valid_sort_by Rush.fields() |> Enum.map(&to_string/1)
+  @valid_dir ["asc", "desc"]
+
+  def parse(params) do
+    Enum.flat_map(params, fn
+      {"dir", v} when v in @valid_dir ->
+        [order_dir: String.to_existing_atom(v)]
+
+      {"sort_by", v} when v in @valid_sort_by ->
+        [order_key: String.to_existing_atom(v)]
+
+      {"page", v} ->
+        {int, _} = Integer.parse(v)
+        [page: int]
+
+      {"size", v} ->
+        {int, _} = Integer.parse(v)
+        [size: int]
+
+      {"q", v} ->
+        [search: v]
+
+      {_k, _v} ->
+        []
+    end)
+    |> Map.new()
+  end
+end
+
 defmodule NflRushing.Stats do
   @moduledoc """
   The Stats context.
@@ -22,14 +56,14 @@ defmodule NflRushing.Stats do
   end
 
   def count_rushes(opts) do
-    query(opts)
+    rushes_query(opts)
+    |> limit(nil)
+    |> offset(nil)
     |> Repo.aggregate(:count)
   end
 
-  def query_rushes(%{page: page, size: size} = opts) do
-    query(opts)
-    |> paginate(page, size)
-    |> Repo.all()
+  def query_rushes(opts) when is_map(opts) do
+    Repo.all(rushes_query(opts))
   end
 
   @doc """
@@ -119,10 +153,24 @@ defmodule NflRushing.Stats do
       offset: ^((page - 1) * size)
   end
 
-  def query(%{search: search, order_key: key, order_dir: dir, page: page, size: size}) do
-    from(r in Rush,
-      order_by: [{^dir, ^key}],
-      where: ilike(r.player_name, ^"%#{search}%")
-    )
+  defp rushes_query(opts) do
+    query = Rush
+
+    query =
+      case opts do
+        %{order_key: key, order_dir: dir} -> from(query, order_by: {^dir, ^key})
+        _ -> query
+      end
+
+    query =
+      case opts do
+        %{page: page} -> paginate(query, page, Map.get(opts, :size, 10))
+        _ -> query
+      end
+
+    case opts do
+      %{search: search} -> from(r in query, where: ilike(r.player_name, ^"%#{search}%"))
+      _ -> query
+    end
   end
 end
