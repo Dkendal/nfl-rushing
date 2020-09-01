@@ -7,14 +7,18 @@
     rush: @rush,
     return_to: Routes.rush_index_path(@socket, :index) %>
 <% end %>
-<%# <%= inspect assigns, pretty: true %1> %>
+<form phx-submit="search">
+ <input type="text" name="q" value="<%= @search %>" placeholder="Search..."
+   <%= if @loading, do: "readonly" %>
+   />
+</form>
 <table>
   <thead>
     <tr>
       <%= for {text, field} <- table_headers() do %>
         <th>
-          <span><%= sort_link @socket, query: @query, text: text, field: field %></span>
-          <%= case sort_dir(field, @query) do %>
+          <span><%= sort_link @socket, dir: @order_dir, key: @order_key, text: text, field: field %></span>
+          <%= case sort_dir(field, @order_key, @order_dir) do %>
             <% :asc -> %>
             <span>&#9660;</span>
             <% :desc -> %>

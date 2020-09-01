@@ -21,6 +21,14 @@ defmodule NflRushing.Stats do
     Repo.all(Rush)
   end
 
+  def query_rushes(%{search: search, order_key: key, order_dir: dir}) do
+    from(r in Rush,
+      order_by: [{^dir, ^key}],
+      where: ilike(r.player_name, ^"%#{search}%")
+    )
+    |> Repo.all()
+  end
+
   @doc """
   Gets a single rush.
 
@@ -101,4 +109,5 @@ defmodule NflRushing.Stats do
   def change_rush(%Rush{} = rush, attrs \\ %{}) do
     Rush.changeset(rush, attrs)
   end
+
 end
