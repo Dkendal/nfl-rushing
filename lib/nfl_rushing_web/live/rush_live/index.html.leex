@@ -8,55 +8,69 @@
     return_to: Routes.rush_index_path(@socket, :index) %>
 <% end %>
 <form phx-submit="search">
- <input type="text" name="q" value="<%= @search %>" placeholder="Search..."
+  <input type="text" name="q" value="<%= @search %>" placeholder="Search..."
    <%= if @loading, do: "readonly" %>
    />
 </form>
-<table>
-  <thead>
-    <tr>
-      <%= for {text, field} <- table_headers() do %>
-        <th>
-          <span><%= sort_link @socket, dir: @order_dir, key: @order_key, text: text, field: field %></span>
-          <%= case sort_dir(field, @order_key, @order_dir) do %>
-            <% :asc -> %>
-            <span>&#9660;</span>
-            <% :desc -> %>
-            <span>&#9650;</span>
-            <% nil -> %>
-          <% end %>
-        </th>
-      <% end %>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody id="rushes">
-    <%= for rush <- @rushes do %>
-      <tr id="rush-<%= rush.id %>">
-        <td><%= rush.player_name %></td>
-        <td><%= rush.team_abbr %></td>
-        <td><%= rush.position %></td>
-        <td><%= rush.attempts_per_game %></td>
-        <td><%= rush.attempts %></td>
-        <td><%= rush.total_yards %></td>
-        <td><%= rush.avg_yards_per_attempt %></td>
-        <td><%= rush.yards_per_game %></td>
-        <td><%= rush.touchdowns %></td>
-        <td>
-          <span><%= rush.longest %></span><span><%= if rush.longest_is_touchdown, do: "T", else: "" %></span>
-        </td>
-        <td><%= rush.first_downs %></td>
-        <td><%= rush.first_down_percentage %></td>
-        <td><%= rush.twenty_plus %></td>
-        <td><%= rush.forty_plus %></td>
-        <td><%= rush.fumbles %></td>
-        <td>
-          <span><%= live_redirect "Show", to: Routes.rush_show_path(@socket, :show, rush) %></span>
-          <span><%= live_patch "Edit", to: Routes.rush_index_path(@socket, :edit, rush) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: rush.id, data: [confirm: "Are you sure?"] %></span>
-        </td>
+<%= if @page_count == 0 do %>
+  <div class="w-full text-center">No results</div>
+<% else %>
+  <table>
+    <thead>
+      <tr>
+        <%= for {text, field} <- table_headers() do %>
+          <th>
+            <span><%= sort_link @socket, dir: @order_dir, key: @order_key, text: text, field: field %></span>
+            <%= case sort_dir(field, @order_key, @order_dir) do %>
+              <% :asc -> %>
+              <span>&#9660;</span>
+              <% :desc -> %>
+              <span>&#9650;</span>
+              <% nil -> %>
+            <% end %>
+          </th>
+        <% end %>
+        <th></th>
       </tr>
+    </thead>
+    <tbody id="rushes">
+      <%= for rush <- @rushes do %>
+        <tr id="rush-<%= rush.id %>">
+          <td><%= rush.player_name %></td>
+          <td><%= rush.team_abbr %></td>
+          <td><%= rush.position %></td>
+          <td><%= rush.attempts_per_game %></td>
+          <td><%= rush.attempts %></td>
+          <td><%= rush.total_yards %></td>
+          <td><%= rush.avg_yards_per_attempt %></td>
+          <td><%= rush.yards_per_game %></td>
+          <td><%= rush.touchdowns %></td>
+          <td>
+            <span><%= rush.longest %></span><span><%= if rush.longest_is_touchdown, do: "T", else: "" %></span>
+            </td>
+            <td><%= rush.first_downs %></td>
+            <td><%= rush.first_down_percentage %></td>
+            <td><%= rush.twenty_plus %></td>
+            <td><%= rush.forty_plus %></td>
+            <td><%= rush.fumbles %></td>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <div class="flex">
+    <%= if @page > 1 do %>
+      <div class="m-4"><%= live_patch "Prev", to: Routes.rush_index_path(@socket, :index, page: @page - 1) %></div>
     <% end %>
-  </tbody>
-</table>
-<span><%= live_patch "New Rush", to: Routes.rush_index_path(@socket, :new) %></span>
+    <%= for n <- 1..@page_count, n in (@page - 5)..(@page + 5) or n in [1, @page_count] do %>
+      <%= if n == @page do %>
+        <div class="m-4"><%= n %></div>
+      <% else %>
+        <div class="m-4"><%= live_patch to_string(n), to: Routes.rush_index_path(@socket, :index, page: n) %></div>
+      <% end %>
+    <% end %>
+    <%= if @page < @page_count do %>
+      <div class="m-4"><%= live_patch "Next", to: Routes.rush_index_path(@socket, :index, page: @page + 1) %></div>
+    <% end %>
+  </div>
+<% end %>

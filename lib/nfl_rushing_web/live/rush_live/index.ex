@@ -1,39 +1,29 @@
+Rexbug.start("NflRushingWeb.RushLive.Index")
+
 defmodule NflRushingWeb.RushLive.Index do
   use NflRushingWeb, :live_view
 
   alias NflRushing.Stats
   alias NflRushing.Stats.Rush
 
-  #   defmodule Params do
-  #     use Ecto.Schema
-  #     import Ecto.Changeset
-
-  #     embedded_schema do
-  #        field :order_key, :string, default: "player_name"
-  #        field :order_dir, :string, default: "asc"
-  #     end
-
-  #     def changeset(params \\ %__MODULE__{}, attrs \\ %{})
-
-  #     def changeset(params, attrs) do
-  #     end
-  #   end
-
   @impl true
   def mount(params, _session, socket) do
-    {:ok,
-     assign(socket,
-       loading: false,
-       search: nil,
-       order_key: :player_name,
-       order_dir: :asc
-     )
-     |> put_params(params)
-     |> put_rushes()}
+    socket =
+      assign(socket,
+        loading: false,
+        search: nil,
+        order_key: :player_name,
+        order_dir: :asc,
+        page: 1,
+        size: 10
+      )
+
+    {:ok, socket}
   end
 
   @impl true
   def handle_params(params, _url, socket) do
+    IO.puts("Handle params")
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
@@ -52,6 +42,7 @@ defmodule NflRushingWeb.RushLive.Index do
   defp apply_action(socket, :index, params) do
     socket
     |> put_params(params)
+    |> put_page_count()
     |> put_rushes()
     |> assign(:page_title, "Rushing")
     |> assign(:rush, nil)
@@ -59,9 +50,12 @@ defmodule NflRushingWeb.RushLive.Index do
 
   @impl true
   def handle_event("search", %{"q" => search}, socket) do
+    IO.inspect(search)
+
     socket =
       socket
       |> assign(:search, search)
+      |> put_page_count()
       |> put_rushes()
 
     {:noreply, socket}
@@ -81,10 +75,25 @@ defmodule NflRushingWeb.RushLive.Index do
   defp put_params(socket, params) do
     query_args =
       Enum.flat_map(params, fn
-        {"dir", v} when v in @valid_dir -> [order_dir: String.to_existing_atom(v)]
-        {"sort_by", v} when v in @valid_sort_by -> [order_key: String.to_existing_atom(v)]
-        {"q", v} -> [search: v]
-        {_k, _v} -> []
+        {"dir", v} when v in @valid_dir ->
+          [order_dir: String.to_existing_atom(v)]
+
+        {"sort_by", v} when v in @valid_sort_by ->
+          [order_key: String.to_existing_atom(v)]
+
+        {"page", v} ->
+          {int, _} = Integer.parse(v)
+          [page: int]
+
+        {"size", v} ->
+          {int, _} = Integer.parse(v)
+          [size: int]
+
+        {"q", v} ->
+          [search: v]
+
+        {_k, _v} ->
+          []
       end)
 
     socket
@@ -92,6 +101,10 @@ defmodule NflRushingWeb.RushLive.Index do
   end
 
   use NflRushing.Context
+
+  defp put_rushes(%{assigns: %{page_count: 0}} = socket) do
+    assign(socket, :rushes, [])
+  end
 
   defp put_rushes(socket) do
     assign(socket, :rushes, list_rushes(socket.assigns))
@@ -101,12 +114,19 @@ defmodule NflRushingWeb.RushLive.Index do
     Stats.query_rushes(opts)
   end
 
+  defp put_page_count(socket) do
+    count = ceil(Stats.count_rushes(socket.assigns) / socket.assigns.size)
+
+    assign(socket, page_count: count, page: min(max(count, 1), socket.assigns.page))
+  end
+
   defp list_rushes() do
     Stats.list_rushes()
   end
 
   def sort_link(socket, %{text: text, dir: dir, key: key, field: field}) do
     live_patch(text,
+      replace: false,
       to:
         Routes.rush_index_path(
           socket,
@@ -161,4 +181,13 @@ defmodule NflRushingWeb.RushLive.Index do
       {gettext("Fumbles"), :fumbles}
     ]
   end
+
+  def display_page_link?(n, page, count) do
+    min = page - 5
+    max = page + 5
+    n in min..max or n in [1, count]
+  end
+
+  # def min_page(page), do: @page - 5
+  # def max_page(page), do: @page + 5
 end

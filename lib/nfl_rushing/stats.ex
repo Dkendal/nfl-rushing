@@ -21,11 +21,14 @@ defmodule NflRushing.Stats do
     Repo.all(Rush)
   end
 
-  def query_rushes(%{search: search, order_key: key, order_dir: dir}) do
-    from(r in Rush,
-      order_by: [{^dir, ^key}],
-      where: ilike(r.player_name, ^"%#{search}%")
-    )
+  def count_rushes(opts) do
+    query(opts)
+    |> Repo.aggregate(:count)
+  end
+
+  def query_rushes(%{page: page, size: size} = opts) do
+    query(opts)
+    |> paginate(page, size)
     |> Repo.all()
   end
 
@@ -110,4 +113,16 @@ defmodule NflRushing.Stats do
     Rush.changeset(rush, attrs)
   end
 
+  defp paginate(query, page, size) do
+    from query,
+      limit: ^size,
+      offset: ^((page - 1) * size)
+  end
+
+  def query(%{search: search, order_key: key, order_dir: dir, page: page, size: size}) do
+    from(r in Rush,
+      order_by: [{^dir, ^key}],
+      where: ilike(r.player_name, ^"%#{search}%")
+    )
+  end
 end
