@@ -187,7 +187,4 @@ defmodule NflRushingWeb.RushLive.Index do
     max = page + 5
     n in min..max or n in [1, count]
   end
-
-  # def min_page(page), do: @page - 5
-  # def max_page(page), do: @page + 5
 end
