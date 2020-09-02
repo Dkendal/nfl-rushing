@@ -1,12 +1,4 @@
 <h1>Listing Rushes</h1>
-<%= if @live_action in [:new, :edit] do %>
-  <%= live_modal @socket, NflRushingWeb.RushLive.FormComponent,
-    id: @rush.id || :new,
-    title: @page_title,
-    action: @live_action,
-    rush: @rush,
-    return_to: Routes.rush_index_path(@socket, :index) %>
-<% end %>
 <form phx-submit="search">
   <input type="text" name="q" value="<%= @search %>" placeholder="Search..."
    <%= if @loading, do: "readonly" %>

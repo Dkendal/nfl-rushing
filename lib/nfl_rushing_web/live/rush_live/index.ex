@@ -26,18 +26,6 @@ defmodule NflRushingWeb.RushLive.Index do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :edit, %{"id" => id}) do
-    socket
-    |> assign(:page_title, "Edit Rush")
-    |> assign(:rush, Stats.get_rush!(id))
-  end
-
-  defp apply_action(socket, :new, _params) do
-    socket
-    |> assign(:page_title, "New Rush")
-    |> assign(:rush, %Rush{})
-  end
-
   defp apply_action(socket, :index, params) do
     socket
     |> put_params(params)
@@ -59,14 +47,6 @@ defmodule NflRushingWeb.RushLive.Index do
       |> put_rushes()
 
     {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("delete", %{"id" => id}, socket) do
-    rush = Stats.get_rush!(id)
-    {:ok, _} = Stats.delete_rush(rush)
-
-    {:noreply, assign(socket, :rushes, list_rushes())}
   end
 
   use NflRushing.Context
@@ -91,10 +71,6 @@ defmodule NflRushingWeb.RushLive.Index do
     count = ceil(Stats.count_rushes(socket.assigns) / socket.assigns.size)
 
     assign(socket, page_count: count, page: min(max(count, 1), socket.assigns.page))
-  end
-
-  defp list_rushes() do
-    Stats.list_rushes()
   end
 
   def sort_link(socket, %{text: text, dir: dir, key: key, field: field}) do
