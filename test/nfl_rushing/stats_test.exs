@@ -71,17 +71,16 @@ defmodule NflRushing.StatsTest do
     end
 
     test "count_rushes/1 count rushes that match the query" do
-      rush_1 = rush_fixture()
+      rush_fixture()
       assert Stats.count_rushes(%{}) == 1
 
-      rush_2 = rush_fixture(%{player_name: "some other player name"})
+      rush_fixture(%{player_name: "some other player name"})
       assert Stats.count_rushes(%{}) == 2
 
       assert Stats.count_rushes(%{order_dir: :asc, order_key: :player_name}) == 2
 
-      assert Stats.count_rushes(%{page: 1, size: 1}) == 1
-
-      assert Stats.count_rushes(%{page: 2, size: 1}) == 1
+      # Pagination isn't used for counts
+      assert Stats.count_rushes(%{page: 1, size: 1}) == 2
 
       assert Stats.count_rushes(%{search: "other"}) == 1
     end
