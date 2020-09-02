@@ -3,8 +3,44 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
-@import "./phoenix.css";
 @import "../node_modules/nprogress/nprogress.css";
+
+html {
+  font-size: 14px;
+}
+
+html, body {
+  height: 100%;
+}
+
+html, body {
+  width: 100%;
+}
+
+.logo {
+  width: 110px;
+  height: 24px;
+}
+
+.btn {
+  @apply px-4 py-2 font-medium rounded bg-secondary;
+}
+
+.btn:hover {
+  @apply bg-secondary-light;
+}
+
+.data-table-row > td {
+  @apply p-6;
+}
+
+.data-table-row + .data-table-row {
+  @apply border-t-2 border-primary-light;
+}
+
+.sorting-arrow:hover {
+  @apply bg-primary;
+}
 
 /* LiveView specific classes for your customizations */
 .phx-no-feedback.invalid-feedback,

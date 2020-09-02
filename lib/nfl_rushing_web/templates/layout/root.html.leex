@@ -5,26 +5,31 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <%= csrf_meta_tag() %>
-    <%= live_title_tag assigns[:page_title] || "NflRushing", suffix: " · Phoenix Framework" %>
+    <%= live_title_tag assigns[:page_title] || "NFL Rushing", suffix: " · Dylan Kendal" %>
     <link phx-track-static rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <script defer phx-track-static type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
   </head>
-  <body>
-    <header>
-      <section class="container">
+  <body class="flex flex-col ext-base bg-primary text-fg font-body">
+    <header class="p-5 bg-primary-light">
+      <section class="flex flex-row-reverse justify-end ">
         <nav role="navigation">
-          <ul>
-            <li><a href="https://hexdocs.pm/phoenix/overview.html">Get Started</a></li>
-            <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
-              <li><%= link "LiveDashboard", to: Routes.live_dashboard_path(@conn, :home) %></li>
-            <% end %>
-          </ul>
+          <ul></ul>
         </nav>
-        <a href="https://phoenixframework.org/" class="phx-logo">
-          <img src="<%= Routes.static_path(@conn, "/images/phoenix.png") %>" alt="Phoenix Framework Logo"/>
+        <a href="/">
+          <div
+            style="background: url(<%= Routes.static_path(@conn, "/images/thescore-logo.svg") %>) 0 2px no-repeat;
+                   width: 110px;
+                   height: 24px;
+                   background-size:
+                   auto 190%;"
+          ></div>
         </a>
       </section>
     </header>
-    <%= @inner_content %>
+    <div class="flex-grow"><%= @inner_content %></div>
+    <footer class="flex flex-col self-end w-full py-10 mt-20 text-sm text-center space-y-2 bg-primary-light">
+      <p>Built by Dylan Kendal</p>
+      <p><a class="hover:opacity-50" href="https://github.com/dkendal/">https://github.com/dkendal/</a></p>
+    </footer>
   </body>
 </html>

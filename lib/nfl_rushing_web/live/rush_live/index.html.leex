@@ -1,38 +1,51 @@
-<h1>Listing Rushes</h1>
-<form phx-submit="search">
-  <input type="text" name="q" value="<%= @search %>" placeholder="Search..."
-   <%= if @loading, do: "readonly" %>
+<h1 class="mx-4 mt-10 text-4xl xl:mx-0">NFL Rushing</h1>
+<%# Player name search %>
+<form class="mx-4 my-8 xl:mx-0" phx-submit="search">
+  <input type="text"
+         name="q"
+         value="<%= @search %>"
+         placeholder="Search..."
+         autocomplete="off"
+         class="w-full text-xl placeholder-transparent bg-transparent rounded border-3 border-primary-light placeholder-fg"
+         <%= if @loading, do: "readonly" %>
    />
 </form>
 <%= if @page_count == 0 do %>
-  <div class="w-full text-center">No results</div>
+  <div class="w-full text-4xl text-center">No results</div>
 <% else %>
-  <table>
+  <div class="w-full overflow-x-auto">
+  <table class="w-full table-auto">
     <thead>
-      <tr>
+      <tr class="bg-primary-light">
         <%= for {text, field} <- table_headers() do %>
-          <th>
+          <th class="px-6 py-3 hover:opacity-75">
             <div class="flex">
-              <div><%= sort_link @socket, dir: @order_dir, key: @order_key, text: text, field: field %></div>
+              <div class="flex">
+                <%= sort_link @socket, dir: @order_dir, key: @order_key, text: text, field: field, class: "text-fg font-medium" %>
+              </div>
               <%= case sort_dir(field, @order_key, @order_dir) do %>
                 <% :asc -> %>
-                <div>&#9660;</div>
+                <span class="mx-2">&#x2B07;</span>
                 <% :desc -> %>
-                <div>&#9650;</div>
+                <span class="mx-2">&#x2B06;</span>
                 <% nil -> %>
               <% end %>
             </th>
           <% end %>
         </div>
-        <th></th>
       </tr>
+      <colgroup>
+        <%= for {_text, field} <- table_headers() do %>
+          <col class="<%= if field == @order_key, do: "bg-primary-light" %>">
+        <% end %>
+      </colgroup>
     </thead>
-    <tbody id="rushes">
+    <tbody id="rushes" class="text-right">
       <%= for rush <- @rushes do %>
-        <tr id="rush-<%= rush.id %>">
-          <td><%= rush.player_name %></td>
-          <td><%= rush.team_abbr %></td>
-          <td><%= rush.position %></td>
+        <tr id="rush-<%= rush.id %>" class="data-table-row hover:opacity-75">
+          <td class="font-medium text-left"><%= rush.player_name %></td>
+          <td class="text-left"><%= rush.team_abbr %></td>
+          <td class="text-left"><%= rush.position %></td>
           <td><%= rush.attempts_per_game %></td>
           <td><%= rush.attempts %></td>
           <td><%= rush.total_yards %></td>
@@ -52,22 +65,30 @@
       <% end %>
     </tbody>
   </table>
-
-  <div class="flex">
-    <%= if @page > 1 do %>
-      <div class="m-4"><%= live_patch "Prev", to: Routes.rush_index_path(@socket, :index, page: @page - 1) %></div>
-    <% end %>
-    <%= for n <- 1..@page_count, n in (@page - 5)..(@page + 5) or n in [1, @page_count] do %>
-      <%= if n == @page do %>
-        <div class="m-4"><%= n %></div>
-      <% else %>
-        <div class="m-4"><%= live_patch to_string(n), to: Routes.rush_index_path(@socket, :index, page: n) %></div>
-      <% end %>
-    <% end %>
-    <%= if @page < @page_count do %>
-      <div class="m-4"><%= live_patch "Next", to: Routes.rush_index_path(@socket, :index, page: @page + 1) %></div>
-    <% end %>
   </div>
-  <span class="m4"><%= link "Download visible", to: Routes.download_path(@socket, :index, "csv", q: @search, sort_by: @order_key, dir: @order_dir, page: @page), download: true  %></span>
-  <span class="m-4"><%= link "Download all", to: Routes.download_path(@socket, :index, "csv", q: @search, sort_by: @order_key, dir: @order_dir), download: true %></span>
+  <%# Pager %>
+  <div class="flex items-center justify-end mx-4 my-2 text-lg xl:mx-0 border-primary-light">
+    <div><%= (@page - 1) * @size + 1 %>-<%= min(@page * @size, @count) %> of <%= @count %></div>
+    <div class="flex">
+      <%= if @page > 1 do %>
+        <div class="m-4"><%= live_patch icon("skip_previous"), to: Routes.rush_index_path(@socket, :index, page: 1) %></div>
+        <div class="m-4"><%= live_patch icon("keyboard_arrow_left"), to: Routes.rush_index_path(@socket, :index, page: @page - 1) %></div>
+      <% else %>
+        <div class="m-4 opacity-50"><%= icon("skip_previous") %></div>
+        <div class="m-4 opacity-50"><%= icon("keyboard_arrow_left") %></div>
+      <% end %>
+      <%= if @page < @page_count do %>
+        <div class="m-4"><%= live_patch icon("keyboard_arrow_right"), to: Routes.rush_index_path(@socket, :index, page: @page + 1) %></div>
+        <div class="m-4"><%= live_patch icon("skip_next"), to: Routes.rush_index_path(@socket, :index, page: @page_count) %></div>
+      <% else %>
+        <div class="m-4 opacity-50"><%= icon("keyboard_arrow_right") %></div>
+        <div class="m-4 opacity-50"><%= icon("skip_next") %></div>
+      <% end %>
+    </div>
+  </div>
+  <%# Download links %>
+  <div class="flex flex-row justify-center space-x-2">
+    <%= link "Download visible", to: Routes.download_path(@socket, :index, "csv", q: @search, sort_by: @order_key, dir: @order_dir, page: @page), download: true, class: "btn" %>
+    <%= link "Download all", to: Routes.download_path(@socket, :index, "csv", q: @search, sort_by: @order_key, dir: @order_dir), download: true, class: "btn" %>
+  </div>
 <% end %>

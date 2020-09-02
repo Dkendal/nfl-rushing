@@ -54,7 +54,7 @@ msgstr "Lng"
 #, elixir-format
 #: lib/nfl_rushing_web/live/rush_live/index.html.leex:15
 msgid "Player name"
-msgstr "Name"
+msgstr "Player"
 
 #, elixir-format
 #: lib/nfl_rushing_web/live/rush_live/index.html.leex:17

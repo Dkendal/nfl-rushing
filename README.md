@@ -59,13 +59,18 @@ If you have any questions regarding requirements, do not hesitate to email your 
 docker, and docker-compose must be installed locally.
 Alternatively Elixir ~> v1.7, Nodejs and OTP ~> 21.0 must be installed.
 
+Follow one of the methods below, and after the server has started in Docker or
+otherwise visit the web app at http://localhost:4000/
+
+Styles will be present after webpack finishes the initial compilation.
+
+Demo application is present on the index and should be be somewhat self
+explanatory.
+
 #### Running development mode in Docker
 
 ```sh
-docker-compose build
-docker-compose run web mix do deps.get, deps.compile
-docker-compose run web mix ecto.setup
-docker-compose run web sh -c 'cd assets && npm i'
+./setup.sh
 docker-compose up
 ```
 

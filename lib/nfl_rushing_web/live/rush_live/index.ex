@@ -68,32 +68,27 @@ defmodule NflRushingWeb.RushLive.Index do
   end
 
   defp put_page_count(socket) do
-    count = ceil(Stats.count_rushes(socket.assigns) / socket.assigns.size)
+    count = Stats.count_rushes(socket.assigns)
+    page_count = ceil(count / socket.assigns.size)
+    page = min(max(page_count, 1), socket.assigns.page)
 
-    assign(socket, page_count: count, page: min(max(count, 1), socket.assigns.page))
+    assign(socket, count: count, page_count: page_count, page: page)
   end
 
-  def sort_link(socket, %{text: text, dir: dir, key: key, field: field}) do
-    live_patch(text,
-      replace: false,
-      to:
-        Routes.rush_index_path(
-          socket,
-          :index,
-          sort_by: field,
-          dir: toggle_dir(field, key, dir)
-        )
-    )
-  end
-
-  def sort_link(socket, %{text: text, field: field, query: query}) do
-    live_patch(text,
-      to: Routes.rush_index_path(socket, :index, sort_by: field, dir: toggle_dir(field, query))
+  def sort_link(socket, %{text: text, dir: dir, key: key, field: field}, opts) do
+    live_patch(
+      text,
+      [
+        {:replace, false},
+        {:to,
+         Routes.rush_index_path(socket, :index, sort_by: field, dir: toggle_dir(field, key, dir))}
+        | opts
+      ]
     )
   end
 
   def sort_link(socket, opts) when is_list(opts) do
-    sort_link(socket, Map.new(opts))
+    sort_link(socket, Map.new(opts), opts)
   end
 
   @doc """
@@ -129,6 +124,10 @@ defmodule NflRushingWeb.RushLive.Index do
       {gettext("Forty plus"), :forty_plus},
       {gettext("Fumbles"), :fumbles}
     ]
+  end
+
+  def icon(name) do
+    img_tag(Routes.static_path(NflRushingWeb.Endpoint, "/images/#{name}.svg"))
   end
 
   def display_page_link?(n, page, count) do
